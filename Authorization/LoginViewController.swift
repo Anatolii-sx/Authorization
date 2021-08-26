@@ -9,6 +9,9 @@ import UIKit
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
+    let login = "admin"
+    let password = "admin123"
+    
     @IBOutlet weak var userNameTF: UITextField!
     @IBOutlet weak var passwordTF: UITextField!
     
@@ -24,35 +27,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         passwordTF.enablesReturnKeyAutomatically = true
     }
     
-    @IBAction func logInButtonTapped() {
-        guard let userName = userNameTF.text, !userName.isEmpty,
-              let password = passwordTF.text, !password.isEmpty
-        else {
-            showAlert(title: "Warning", message: "The field of user name or password is empty")
-            return
-        }
-        
-        if userName == "admin" && password == "admin123" {
-            performSegue(
-                withIdentifier: "segueFromLoginVCToWelcomeVC",
-                sender: nil
-            )
-        } else {
-            showAlert(title: "Warning", message: "Wrong user name or password")
-        }
-    }
-    
-    @IBAction func forgotUserNameButtonTapped() {
-        showAlert(title: "Help", message: "Your username: admin")
-    }
-    
-    @IBAction func forgotPasswordButtonTapped() {
-        showAlert(title: "Help", message: "Your password: admin123")
-    }
-    
-    @IBAction func unwind(for unwindSegue: UIStoryboardSegue) {
-        userNameTF.text = nil
-        passwordTF.text = nil
+    // Hide keyboard
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -61,6 +39,39 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         welcomeVC.userName = userNameTF.text
     }
     
+    @IBAction func unwind(for unwindSegue: UIStoryboardSegue) {
+        userNameTF.text = nil
+        passwordTF.text = nil
+    }
+    
+    @IBAction func logInButtonTapped() {
+        guard let userName = userNameTF.text, !userName.isEmpty,
+              let password = passwordTF.text, !password.isEmpty
+        else {
+            showAlert(title: "Warning", message: "The field of user name or password is empty")
+            return
+        }
+        
+        if userName == login && password == password {
+            performSegue(
+                withIdentifier: "segueFromLoginVCToWelcomeVC",
+                sender: nil
+            )
+        } else {
+            passwordTF.text = nil
+            showAlert(title: "Warning", message: "Wrong user name or password")
+        }
+    }
+    
+    @IBAction func forgotUserNameButtonTapped() {
+        showAlert(title: "Help", message: "Your username: \(login)")
+    }
+    
+    @IBAction func forgotPasswordButtonTapped() {
+        showAlert(title: "Help", message: "Your password: \(password)")
+    }
+    
+    // Change focus in fields
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == userNameTF {
             passwordTF.becomeFirstResponder()
@@ -71,11 +82,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    // Hide keyboard
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
-    }
-    
+    // Alert
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(
             title: title,
