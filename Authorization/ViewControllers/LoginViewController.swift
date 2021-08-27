@@ -14,8 +14,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordTF: UITextField!
     
     // MARK: - Private properties
-    private let login = "admin"
-    private let password = "admin123"
+    private let user = User.getUser()
     
     // MARK: - Override methods
     override func viewDidLoad() {
@@ -31,9 +30,24 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let welcomeVC = segue.destination as? WelcomeViewController else { return }
+        let tabBarController = segue.destination as! UITabBarController
+        let viewControllers = tabBarController.viewControllers!
         
-        welcomeVC.userName = userNameTF.text
+        for viewController in viewControllers {
+            if let welcomeVC = viewController as? WelcomeViewController {
+                welcomeVC.name = user.person.name
+                welcomeVC.surname = user.person.surname
+            } else if let navigationVC = viewController as? UINavigationController {
+                let profileVC = navigationVC.topViewController as! ProfileViewController
+                
+                profileVC.title = user.person.name + " " + user.person.surname
+                
+                profileVC.name = user.person.name
+                profileVC.surname = user.person.surname
+                profileVC.email = user.person.email
+                profileVC.phoneNumber = user.person.phoneNumber
+            }
+        }
     }
     
     // Hide keyboard
@@ -44,18 +58,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - IB Actions
     @IBAction func logInButtonTapped() {
-        if userNameTF.text != login || passwordTF.text != password {
+        if userNameTF.text != user.login || passwordTF.text != user.password {
             passwordTF.text = nil
             showAlert(title: "Warning", message: "Wrong user name or password")
         }
     }
     
     @IBAction func forgotUserNameButtonTapped() {
-        showAlert(title: "Help", message: "Your username: \(login)")
+        showAlert(title: "Help", message: "Your username: \(user.login)")
     }
     
     @IBAction func forgotPasswordButtonTapped() {
-        showAlert(title: "Help", message: "Your password: \(password)")
+        showAlert(title: "Help", message: "Your password: \(user.password)")
         
     }
     
@@ -72,7 +86,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             logInButtonTapped()
             performSegue(withIdentifier: "showWelcomeVC", sender: nil)
         }
-        
         return true
     }
     
@@ -85,7 +98,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         )
         
         present(alert, animated: true)
-        
+
         let okButton = UIAlertAction(title: "OK", style: .default)
         
         alert.addAction(okButton)
