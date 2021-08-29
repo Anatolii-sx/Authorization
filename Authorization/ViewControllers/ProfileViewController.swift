@@ -16,10 +16,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var phoneNumberLabel: UILabel!
     
-    var name: String!
-    var surname: String!
-    var email: String!
-    var phoneNumber: String!
+    var user: User!
 
     override func viewWillLayoutSubviews() {
         photo.layer.cornerRadius = photo.frame.width / 2
@@ -28,16 +25,15 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let name = name,
-              let surname = surname,
-              let email = email,
-              let phoneNumber = phoneNumber
-        else { return }
+        guard let user = user else { return }
+        
+        let profileVC = ProfileViewController()
+        profileVC.title = user.person.name + " " + user.person.surname
 
-        nameLabel.text = "Name: \(name)"
-        surnameLabel.text = "Surname: \(surname)"
-        emailLabel.text = "Email: \(email)"
-        phoneNumberLabel.text = "Phone: \(phoneNumber)"
+        nameLabel.text = "Name: \(user.person.name)"
+        surnameLabel.text = "Surname: \(user.person.surname)"
+        emailLabel.text = "Email: \(user.person.email)"
+        phoneNumberLabel.text = "Phone: \(user.person.phoneNumber)"
     }
 
 }

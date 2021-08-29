@@ -31,21 +31,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let tabBarController = segue.destination as! UITabBarController
-        let viewControllers = tabBarController.viewControllers!
+        guard let viewControllers = tabBarController.viewControllers else { return }
         
         for viewController in viewControllers {
             if let welcomeVC = viewController as? WelcomeViewController {
-                welcomeVC.name = user.person.name
-                welcomeVC.surname = user.person.surname
+                welcomeVC.user = user
             } else if let navigationVC = viewController as? UINavigationController {
                 let profileVC = navigationVC.topViewController as! ProfileViewController
-                
-                profileVC.title = user.person.name + " " + user.person.surname
-                
-                profileVC.name = user.person.name
-                profileVC.surname = user.person.surname
-                profileVC.email = user.person.email
-                profileVC.phoneNumber = user.person.phoneNumber
+                profileVC.user = user
             }
         }
     }
