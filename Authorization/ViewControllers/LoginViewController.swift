@@ -30,13 +30,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let tabBarController = segue.destination as! UITabBarController
+        guard let tabBarController = segue.destination as? UITabBarController else { return }
         guard let viewControllers = tabBarController.viewControllers else { return }
         
-        for viewController in viewControllers {
-            if let welcomeVC = viewController as? WelcomeViewController {
+        viewControllers.forEach {
+            if let welcomeVC = $0 as? WelcomeViewController {
                 welcomeVC.user = user
-            } else if let navigationVC = viewController as? UINavigationController {
+            } else if let navigationVC = $0 as? UINavigationController {
                 let profileVC = navigationVC.topViewController as! ProfileViewController
                 profileVC.user = user
             }

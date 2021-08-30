@@ -17,19 +17,16 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var phoneNumberLabel: UILabel!
     
     var user: User!
-
+    
     override func viewWillLayoutSubviews() {
         photo.layer.cornerRadius = photo.frame.width / 2
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        guard let user = user else { return }
         
-        let profileVC = ProfileViewController()
-        profileVC.title = user.person.name + " " + user.person.surname
-
+        title = user.person.name + " " + user.person.surname
+        
         nameLabel.text = "Name: \(user.person.name)"
         surnameLabel.text = "Surname: \(user.person.surname)"
         emailLabel.text = "Email: \(user.person.email)"
